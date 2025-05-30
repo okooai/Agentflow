@@ -1,9 +1,9 @@
 <div align="center">
   <img src=".github/assets/logo.png" height="128">
   <h1>
-      agentflow
+    Agentflow
   </h1>
-  <h4>Yet Another Agent Framework</h4>
+  <h4>Agents for Humans</h4>
 </div>
 
 <p align="center">
