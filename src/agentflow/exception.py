@@ -1,0 +1,2 @@
+class AgentflowError(Exception):
+    pass

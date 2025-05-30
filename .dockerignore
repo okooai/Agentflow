@@ -1,0 +1,9 @@
+.git
+.venv
+.vscode
+ci
+docker/agentflow
+.env
+.gitignore
+.releasrc
+Makefile
