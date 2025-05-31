@@ -13,7 +13,7 @@ class Agent(BaseModel):
         super_.__init__(*args, **kwargs)
 
         self._provider = provider(
-            kwargs.get("provider") or DEFAULT["AF_PROVIDER"]
+            kwargs.get("provider") or DEFAULT["PROVIDER"]
         )
 
     @staticmethod

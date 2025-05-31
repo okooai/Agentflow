@@ -11,14 +11,14 @@ class Hub(BaseModel):
     def get(self, name,
         cache=True,
     ):
-        af_file_ext = CONST["AF_FILE_EXT"]
+        af_file_ext = CONST["FILE_EXT"]
         af_url_name = upy.join2(
-            DEFAULT["AF_URL_HUB"],
+            DEFAULT["URL_HUB"],
             f"{name}{af_file_ext}",
             path=True
         )
         af_file_path_target = upy.join2(
-            DEFAULT["AF_CACHE_HUB"],
+            DEFAULT["CACHE_HUB"],
             f"{name}{af_file_ext}",
             path=True
         )

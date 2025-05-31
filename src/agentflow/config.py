@@ -13,11 +13,13 @@ PATH["DATA"]  = upy.join2(PATH["BASE"], "data", path=True)
 PATH["CACHE"] = upy.get_config_path(NAME)
 
 CONST = {
-    "AF_FILE_EXT": ".af",
+    "FILE_EXT": ".af",
+    "URL_DATA": "https://raw.githubusercontent.com/achillesrasquinha/Agentflow/refs/heads/develop/data"
 }
+CONST["URL_PROVIDERS"] = upy.join2(CONST["URL_DATA"], "providers.json", path=True)
 
 DEFAULT = {
-    "AF_URL_HUB": "https://raw.githubusercontent.com/achillesrasquinha/Agentflow/refs/heads/develop/data/hub",
-    "AF_CACHE_HUB": upy.join2(PATH["CACHE"], "hub", path=True),
-    "AF_PROVIDER": "openai/gpt-4.1"
+    "URL_HUB":       upy.join2(CONST["URL_DATA"], "hub", path=True),
+    "CACHE_HUB":     upy.join2(PATH["CACHE"], "hub", path=True),
+    "PROVIDER":      "openai/gpt-4.1"
 }
