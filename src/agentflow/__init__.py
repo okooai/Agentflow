@@ -21,8 +21,7 @@ from agentflow.__attr__ import (
 
     __author__
 )
-from agentflow.config      import PATH
-from agentflow.__main__    import main
+from agentflow.config  import PATH
 
 from upyog.cache       import Cache
 from upyog.config      import Settings
@@ -41,4 +40,4 @@ def get_version_str():
     version = "%s%s" % (__version__, " (%s)" % __build__ if __build__ else "")
     return version
 
-
+from agentflow.agentflow import hub

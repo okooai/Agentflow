@@ -1,16 +1,16 @@
-agentflow
-===
+Agentflow: Agents, for Humans
+=============================
 
 Release v\ |version|. (:ref:`Installation <install>`)
 
-.. image:: https://img.shields.io/coveralls/github/achillesrasquinha/ccapi.svg?style=flat-square
-    :target: https://coveralls.io/github/achillesrasquinha/ccapi
+.. image:: https://img.shields.io/coveralls/github/achillesrasquinha/agentflow.svg?style=flat-square
+    :target: https://coveralls.io/github/achillesrasquinha/agentflow
 
-.. image:: https://img.shields.io/pypi/pyversions/ccapi.svg?style=flat-square
-    :target: https://pypi.org/project/ccapi/
+.. image:: https://img.shields.io/pypi/pyversions/agentflow.svg?style=flat-square
+    :target: https://pypi.org/project/agentflow/
 
-.. image:: https://img.shields.io/docker/build/achillesrasquinha/ccapi.svg?style=flat-square&logo=docker
-    :target: https://hub.docker.com/r/achillesrasquinha/ccapi
+.. .. image:: https://img.shields.io/docker/build/achillesrasquinha/agentflow.svg?style=flat-square&logo=docker
+..     :target: https://hub.docker.com/r/achillesrasquinha/agentflow
 
 .. image:: https://img.shields.io/badge/made%20with-boilpy-red.svg?style=flat-square
     :target: https://git.io/boilpy
@@ -21,4 +21,14 @@ Release v\ |version|. (:ref:`Installation <install>`)
 .. image:: https://img.shields.io/badge/donate-💵-f44336.svg?style=flat-square
     :target: https://paypal.me/achillesrasquinha
 
-Yet Another Agent Framework
+**Agentflow** is an asynchronous and security-first framework to build agentic workflows, designed to be simple, yet powerful.
+
+**Behold, the power of Agentflow:**
+
+.. code-block:: python
+
+    >>> import agentflow as af
+
+    >>> agent = af.hub("hello-world")
+    >>> agent.run("Hello!")
+    Hello! How can I help you today? 😊
