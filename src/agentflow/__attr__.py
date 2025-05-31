@@ -9,24 +9,28 @@ PY2 = sys.version_info.major == 2
 if PY2:
     FileNotFoundError = OSError
 
+
 def read(fname):
     with open(fname) as f:
         data = f.read()
     return data
 
-def pardir(fname, level = 1):
+
+def pardir(fname, level=1):
     for _ in range(level):
         fname = osp.dirname(fname)
     return fname
+
 
 def strip(string):
     string = string.lstrip()
     string = string.rstrip()
     return string
 
-def safe_decode(object_, encoding = "utf-8"):
+
+def safe_decode(object_, encoding="utf-8"):
     decoded = object_
-    
+
     try:
         decoded = object_.decode(encoding)
     except AttributeError:
@@ -34,21 +38,26 @@ def safe_decode(object_, encoding = "utf-8"):
 
     return decoded
 
-def sequence_filter(list_, filter_, type_ = list):
+
+def sequence_filter(list_, filter_, type_=list):
     result = type_(filter(filter_, list_))
     return result
 
-def get_revision(path, short = False, raise_err = True):
+
+def get_revision(path, short=False, raise_err=True):
     """
     Returns the git revision of a repository. Raises error if not a valid git repository.
     """
     revision = None
 
     try:
-        short    = "--short" if short else ""
+        short = "--short" if short else ""
         with open(os.devnull, "w") as NULL:
-            output   = subprocess.check_output(sequence_filter(["git", "rev-parse", short, "HEAD"], filter_ = None),
-                stderr = NULL, cwd = path)
+            output = subprocess.check_output(
+                sequence_filter(["git", "rev-parse", short, "HEAD"], filter_=None),
+                stderr=NULL,
+                cwd=path,
+            )
         revision = safe_decode(strip(output))
     except (subprocess.CalledProcessError, FileNotFoundError):
         if raise_err:
@@ -56,13 +65,16 @@ def get_revision(path, short = False, raise_err = True):
 
     return revision
 
-__name__                    = "agentflow"
-__command__                 = ("agentflow", "af")
-__version__                 = read(osp.join(pardir(__file__), "VERSION"))
-__build__                   = get_revision(pardir(__file__, 2), short = True, raise_err = False)
-__author__                  = "Achilles Gasper Rasquinha"
-__email__                   = "achillesrasquinha@gmail.com"
-__description__             = "Agentflow is a simple, yet powerful agentic framework, built for humans."
-__keywords__                = ['yet', 'another', 'agent', 'framework']
-__url__                     = "https://github.com/achillesrasquinha/agentflow"
-__license__                 = "MIT License"
+
+__name__        = "agentflow"
+__command__     = ("agentflow", "af")
+__version__     = read(osp.join(pardir(__file__), "VERSION"))
+__build__       = get_revision(pardir(__file__, 2), short=True, raise_err=False)
+__author__      = "Achilles Gasper Rasquinha"
+__email__       = "achillesrasquinha@gmail.com"
+__description__ = (
+    "Agentflow is a simple, yet powerful agentic framework, built for humans."
+)
+__keywords__    = ["yet", "another", "agent", "framework"]
+__url__         = "https://github.com/achillesrasquinha/agentflow"
+__license__     = "MIT License"
