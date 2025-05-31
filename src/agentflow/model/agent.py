@@ -1,6 +1,6 @@
 import upyog as upy
 
-from agentflow.model import BaseModel
+from agentflow.model.base import BaseModel
 from agentflow.model.provider import provider
 
 from agentflow.config import DEFAULT

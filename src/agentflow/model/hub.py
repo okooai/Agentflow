@@ -1,5 +1,4 @@
-import os.path as osp
-import upyog as upy
+import os.path as osp, upyog as upy
 
 from agentflow.model  import (
     BaseModel,
@@ -13,8 +12,8 @@ class Hub(BaseModel):
     ):
         agents = []
 
+        af_file_ext = CONST["FILE_EXT"]
         for name in names:
-            af_file_ext = CONST["FILE_EXT"]
             af_url_name = upy.join2(
                 DEFAULT["URL_HUB"],
                 f"{name}{af_file_ext}",

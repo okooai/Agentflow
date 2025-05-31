@@ -1,12 +1,11 @@
-# imports - module imports
+import upyog as upy
+
 from agentflow.__attr__     import (
     __name__,
     __version__,
     __description__,
     __command__
 )
-from upyog.cli             import util as _cli
-import upyog as upy
 
 _DESCRIPTION_JUMBOTRON = \
 """
@@ -14,9 +13,9 @@ _DESCRIPTION_JUMBOTRON = \
 
 %s
 """ % (
-    _cli.format(__name__,        _cli.RED),
-    _cli.format(__version__,     _cli.BOLD),
-    _cli.format(__description__, _cli.BOLD)
+    upy.cli_format(__name__,        upy.CLI_RED),
+    upy.cli_format(__version__,     upy.CLI_BOLD),
+    upy.cli_format(__description__, upy.CLI_BOLD)
 )
 
 def get_parser():
@@ -33,11 +32,10 @@ def get_parser():
             }
         }
     })
-
     return parser
 
 def get_args(args = None, known = True, as_dict = True):
-    parser  = get_parser()
+    parser = get_parser()
 
     if known:
         args, _ = parser.parse_known_args(args)

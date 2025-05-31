@@ -297,5 +297,9 @@ notebooks: ## Launch Notebooks
 lint: ## Perform Lint
 	$(PYLINT) $(PROJDIR) --output-format=colorized
 
+loc: ## Count Lines of Code
+	$(call log,INFO,Counting Lines of Code)
+	@find $(PROJDIR) -type f -name "*.py" | xargs wc -l | sort -n
+
 help: ## Show help and exit.
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
