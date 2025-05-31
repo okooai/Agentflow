@@ -20,25 +20,26 @@ def get_parser():
             "help": "Fetch an Agent from the Hub",
             "args": {
                 "name": {
-                    "help": "Name of the Agent to fetch",
+                    "help": "Agent Name(s)",
                     "type": str,
-                    "required": True,
+                    "nargs": "+",
                 }
-            },
+            }
+        },
+        "list": {
+            "help": "List all locally available Agents"
         },
         "run": {
             "help": "Run an Agent",
             "args": {
                 "name": {
                     "help": "Name of the Agent to run",
-                    "type": str,
-                    "required": True,
+                    "type": str
                 }
             },
         },
     })
     return parser
-
 
 def get_args(args=None, known=True, as_dict=True):
     parser = get_parser()

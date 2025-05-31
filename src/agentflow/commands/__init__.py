@@ -4,7 +4,7 @@ from __future__ import absolute_import
 import upyog as upy
 
 from agentflow.commands.util import cli_format
-from agentflow import cli
+from agentflow.cli import command as cli_command
 from agentflow.__attr__ import __name__
 
 logger = upy.get_logger(level=upy.LOG_DEBUG)
@@ -17,28 +17,30 @@ ARGUMENTS = dict(
     no_cache        = False,
     no_color        = True,
     output          = None,
-    ignore_error    = False,
+    ignore_errors   = False,
     force           = False,
     verbose         = False,
+
+    name            = None,
 )
 
 
-@cli.command
+@cli_command
 def command(**ARGUMENTS):
     try:
-        return _command(**ARGUMENTS)
+        return upy.run_async(_command(**ARGUMENTS))
     except Exception as e:
         if not isinstance(e, upy.DependencyNotFoundError):
-            cli.echo()
+            upy.echo()
 
             upy.pretty_print_error(e)
 
-            cli.echo(
+            upy.echo(
                 cli_format(
                     """\
 An error occured while performing the above command. This could be an issue with
 "agentflow". Kindly post an issue at https://github.com/achillesrasquinha/agentflow/issues""",
-                    cli.RED,
+                    upy.CLI_RED,
                 )
             )
         else:
@@ -60,19 +62,17 @@ def to_params(kwargs):
     return params
 
 
-def _command(*args, **kwargs):
+async def _command(*args, **kwargs):
     a = to_params(kwargs)
 
     if not a.verbose:
         logger.setLevel(upy.LOG_NOTSET)
 
-    logger.info(f"Environment: {upy.environment()}")
-    logger.info(f"Arguments Passed: {locals()}")
-
     file_ = a.output
 
     if file_:
-        logger.info(f"Writing to output file {file_}...")
         upy.touch(file_)
 
-    logger.info(f"Using {a.jobs} Jobs...")
+    if a.command_1 == "get":
+        from agentflow.model.hub import ahub
+        await ahub(*a.name, fail=not a.ignore_errors, verbose=a.verbose)

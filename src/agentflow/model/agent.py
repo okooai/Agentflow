@@ -5,9 +5,8 @@ from agentflow.model.provider import provider
 
 from agentflow.config import DEFAULT
 
-
 class Agent(BaseModel):
-    _REPR_ATTRS = ["id", "name"]
+    _REPR_ATTRS = ("id", "name")
 
     def __init__(self, *args, **kwargs):
         super_ = super(BaseModel, self)
@@ -16,9 +15,9 @@ class Agent(BaseModel):
         self._provider = provider(kwargs.get("provider") or DEFAULT["AF_PROVIDER"])
 
     @staticmethod
-    def load(fpath):
+    def load(name, fpath):
         metadata = upy.load_config(fpath)
-        return Agent(name=metadata["name"])
+        return Agent(name=metadata.get("name") or name)
 
     def run(self, input=None):
         """

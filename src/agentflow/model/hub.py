@@ -1,8 +1,8 @@
 import os.path as osp, re, upyog as upy
 
-from agentflow.model import BaseModel, Agent
-from agentflow.config import CONST, DEFAULT
-
+from agentflow.model     import BaseModel, Agent
+from agentflow.config    import CONST, DEFAULT
+from agentflow.exception import AgentflowError
 
 class Hub(BaseModel):
     def _resolve_agent_uri(self, uri):
@@ -12,48 +12,98 @@ class Hub(BaseModel):
 
         meta = match.groupdict()
 
+        url  = CONST["AF_URL_REPO_BASE"]
+
         namespace = meta["namespace"]
         name = meta["name"]
+
+        if not namespace:
+            namespace = CONST["AF_NAMESPACE"]
 
         if not name:
             raise ValueError(f"Invalid Agent URI format: {uri}")
 
         tag = match.group("tag") or CONST["AF_TAG"]
 
-        return {"namespace": namespace, "name": name, "tag": tag}
+        return {"namespace": namespace, "name": name, "tag": tag,
+            "url": url}
 
-    async def _afetch_agent(self, name, cache=True):
-        af_name = self._resolve_agent_uri(name)
+    async def _afetch_agent(self, name, verbose=False):
+        meta   = self._resolve_agent_uri(name)
 
-        af_file = CONST["AF_FILENAME"]
-        af_url_name = upy.join2(
-            DEFAULT["AF_URL_HUB"], af_name["name"], af_file, path=True
+        url    = upy.join2(meta["url"], meta["namespace"], meta["name"], path=True)
+        target = upy.join2(
+            DEFAULT["AF_CACHE_HUB"],
+            meta["namespace"],
+            meta["name"],
+            path=True
         )
-        af_file_path_target = upy.join2(
-            DEFAULT["AF_CACHE_HUB"], af_file, af_name["name"], path=True
-        )
 
-        if not (osp.exists(af_file_path_target) and cache):
-            upy.download_file(af_url_name, af_file_path_target)
+        if not osp.exists(target):
+            upy.git_clone(url, target, depth=1, verbose=verbose)
+        else:
+            upy.update_git_repo(
+                target, clone=False, url=url
+            )
 
-        return Agent.load(af_file_path_target)
+        fpath = upy.join2(target, CONST["AF_FILENAME"], path=True)
+
+        agent = None
+
+        try:
+            agent = Agent.load(name, fpath)
+        except upy.FileNotFoundError:
+            errstr = f"No Agentfile found for '{name}'"
+            self.log("error", errstr)
+
+            upy.remove(target, recursive=True)
+
+            raise AgentflowError(errstr)
+
+        return agent
 
     async def aget(
         self,
         *names,
-        cache=True,
+        fail=False,
+        verbose=False
     ):
-        return upy.squash(
-            await upy.run_async_all(
-                [self._afetch_agent(name, cache=cache) for name in names]
+        agents = await upy.run_async_all(
+            [self._afetch_agent(name, verbose=verbose) for name in names]
+        , fail=False)
+
+        refmap = zip(names, agents)
+
+        agents, errors = upy.array_filter(
+            lambda x: isinstance(x, Agent),
+            agents,
+            other=True
+        )
+
+        count  = len(agents)
+
+        self.log("success", (
+                f"Fetched {count} {upy.pluralize('Agent', count)}: "
+                f"{upy.join2([a.name for a in agents], by=', ')}"
             )
         )
 
+        if errors:
+            errmap = {name: e for name, e in refmap if isinstance(e, Exception)}
+            errstr = (
+                f"Failed to fetch {len(errors)} {upy.pluralize('Agent', len(errors))}: "
+                f"{upy.join2([f'({name}: {repr(e)})' for name, e in upy.iteritems(errmap)], by=', ')}"
+            )
+            self.log("error", errstr)
+
+            if fail:
+                raise AgentflowError(errstr)
+
+        return upy.squash(agents)
 
 async def ahub(*args, **kwargs):
     hub_ = Hub()
     return await hub_.aget(*args, **kwargs)
-
 
 def hub(*args, **kwargs):
     return upy.run_async(ahub(*args, **kwargs))
