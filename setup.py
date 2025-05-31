@@ -1,8 +1,6 @@
 # pylint: disable=E0602
 
-import sys
 import os.path as osp
-import glob
 import io
 import shutil
 
