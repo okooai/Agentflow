@@ -21,8 +21,9 @@ class Agent(BaseModel):
     @staticmethod
     def load(fpath):
         metadata = upy.load_config(fpath)
-        print(metadata)
-        return Agent(name)
+        return Agent(
+            name = metadata["name"]
+        )
     
     def run(self, input=None):
         """

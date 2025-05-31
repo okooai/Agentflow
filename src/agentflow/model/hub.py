@@ -8,28 +8,34 @@ from agentflow.model  import (
 from agentflow.config import CONST, DEFAULT
 
 class Hub(BaseModel):
-    async def aget(self, name,
+    async def aget(self, *names,
         cache=True,
     ):
-        af_file_ext = CONST["FILE_EXT"]
-        af_url_name = upy.join2(
-            DEFAULT["URL_HUB"],
-            f"{name}{af_file_ext}",
-            path=True
-        )
-        af_file_path_target = upy.join2(
-            DEFAULT["CACHE_HUB"],
-            f"{name}{af_file_ext}",
-            path=True
-        )
-        
-        if not (osp.exists(af_file_path_target) and cache):
-            upy.download_file(
-                af_url_name,
-                af_file_path_target,
-            )
+        agents = []
 
-        return Agent.load(af_file_path_target)
+        for name in names:
+            af_file_ext = CONST["FILE_EXT"]
+            af_url_name = upy.join2(
+                DEFAULT["URL_HUB"],
+                f"{name}{af_file_ext}",
+                path=True
+            )
+            af_file_path_target = upy.join2(
+                DEFAULT["CACHE_HUB"],
+                f"{name}{af_file_ext}",
+                path=True
+            )
+            
+            if not (osp.exists(af_file_path_target) and cache):
+                upy.download_file(
+                    af_url_name,
+                    af_file_path_target
+                )
+
+            agent = Agent.load(af_file_path_target)
+            agents.append(agent)
+
+        return upy.squash(agents)
 
 async def ahub(*args, **kwargs):
     hub_ = Hub()
