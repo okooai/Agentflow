@@ -13,7 +13,7 @@ PATH["DATA"]  = upy.join2(PATH["BASE"], "data", path=True)
 PATH["CACHE"] = upy.get_config_path(NAME)
 
 CONST = {
-    "FILE_EXT": ".af",
+    "FILENAME": "Agentfile",
     "URL_DATA": "https://raw.githubusercontent.com/achillesrasquinha/Agentflow/refs/heads/develop/data"
 }
 CONST["URL_PROVIDERS"] = upy.join2(CONST["URL_DATA"], "providers.json", path=True)

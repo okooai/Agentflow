@@ -21,6 +21,16 @@ _DESCRIPTION_JUMBOTRON = \
 def get_parser():
     parser = upy.get_base_parser(__command__, _DESCRIPTION_JUMBOTRON)
     upy.add_sub_commands(parser, {
+        "get": {
+            "help": "Fetch an Agent from the Hub",
+            "args": {
+                "name": {
+                    "help": "Name of the Agent to fetch",
+                    "type": str,
+                    "required": True
+                }
+            }
+        },
         "run": {
             "help": "Run an Agent",
             "args": {

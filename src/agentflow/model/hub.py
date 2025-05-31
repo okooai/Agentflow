@@ -12,16 +12,18 @@ class Hub(BaseModel):
     ):
         agents = []
 
-        af_file_ext = CONST["FILE_EXT"]
+        af_file = CONST["FILENAME"]
         for name in names:
             af_url_name = upy.join2(
                 DEFAULT["URL_HUB"],
-                f"{name}{af_file_ext}",
+                name,
+                af_file,
                 path=True
             )
             af_file_path_target = upy.join2(
                 DEFAULT["CACHE_HUB"],
-                f"{name}{af_file_ext}",
+                af_file,
+                name,
                 path=True
             )
             
