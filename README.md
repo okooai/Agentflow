@@ -3,7 +3,7 @@
   <h1>
     Agentflow
   </h1>
-  <h4>Agents for Humans</h4>
+  <h4>Agents, for Humans</h4>
 </div>
 
 <p align="center">

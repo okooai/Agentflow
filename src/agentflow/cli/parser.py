@@ -6,7 +6,7 @@ from agentflow.__attr__     import (
     __command__
 )
 from upyog.cli             import util as _cli
-from upyog.cli.parser      import get_base_parser
+import upyog as upy
 
 _DESCRIPTION_JUMBOTRON = \
 """
@@ -20,7 +20,20 @@ _DESCRIPTION_JUMBOTRON = \
 )
 
 def get_parser():
-    parser = get_base_parser(__command__, _DESCRIPTION_JUMBOTRON)
+    parser = upy.get_base_parser(__command__, _DESCRIPTION_JUMBOTRON)
+    upy.add_sub_commands(parser, {
+        "run": {
+            "help": "Run an Agent",
+            "args": {
+                "name": {
+                    "help": "Name of the Agent to run",
+                    "type": str,
+                    "required": True
+                }
+            }
+        }
+    })
+
     return parser
 
 def get_args(args = None, known = True, as_dict = True):

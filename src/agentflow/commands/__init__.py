@@ -52,6 +52,7 @@ def to_params(kwargs):
     kwargs = merge_dict(ARGUMENTS, kwargs)
 
     for k, v in iteritems(kwargs):
+        k = k.replace("-", "_")
         setattr(params, k, v)
 
     return params

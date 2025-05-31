@@ -11,15 +11,6 @@ from setuptools import setup, find_packages
 from setuptools.command.develop import develop
 from setuptools.command.install import install
 
-
-
-# import pip
-
-# try:
-#     from pip._internal.req import parse_requirements # pip 10
-# except ImportError:
-#     from pip.req           import parse_requirements # pip 9
-
 # globals
 PACKAGE     = "agentflow"
 SRCDIR      = "src"
@@ -84,8 +75,13 @@ def get_dependencies(type_ = None):
     
     return requirements
 
-PKGINFO    = get_package_info()
+PKGINFO = get_package_info()
 
+def get_commands():
+    commands = PKGINFO.get("__command__", PKGINFO["__name__"])
+    if isinstance(commands, str):
+        commands = [commands]
+    return commands
 
 def remove_cache():
     userdir = osp.expanduser("~")
@@ -128,9 +124,9 @@ metadata = dict(
     entry_points         = {
         "console_scripts": [
             "%s = %s.__main__:main" % (
-                PKGINFO["__command__"] if "__command__" in PKGINFO else PKGINFO["__name__"],
+                command,
                 PACKAGE
-            )
+            ) for command in get_commands()
         ]
     },
     
@@ -164,7 +160,5 @@ metadata = dict(
         "develop": DevelopCommand
     }
 )
-
-
 
 setup(**metadata)
