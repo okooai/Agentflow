@@ -21,5 +21,5 @@ CONST["URL_PROVIDERS"] = upy.join2(CONST["URL_DATA"], "providers.json", path=Tru
 DEFAULT = {
     "URL_HUB":       upy.join2(CONST["URL_DATA"], "hub", path=True),
     "CACHE_HUB":     upy.join2(PATH["CACHE"], "hub", path=True),
-    "PROVIDER":      "openai/gpt-4.1"
+    "PROVIDER":      "openai"
 }

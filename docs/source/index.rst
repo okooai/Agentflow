@@ -30,5 +30,5 @@ Release v\ |version|. (:ref:`Installation <install>`)
     >>> import agentflow as af
 
     >>> agent = af.hub("hello-world")
-    >>> agent.run("Hello!")
+    >>> agent("Hello!")
     Hello! How can I help you today? 😊

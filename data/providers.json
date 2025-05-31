@@ -1,5 +1,6 @@
 {
     "openai/gpt-4.1": {
-        "auth": "api_key"
+        "auth": "api_key",
+        "alias": "openai"
     }
 }

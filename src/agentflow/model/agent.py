@@ -1,7 +1,9 @@
-from agentflow.model    import BaseModel
-from agentflow.provider import provider
+import upyog as upy
 
-from agentflow.config   import DEFAULT
+from agentflow.model import BaseModel
+from agentflow.model.provider import provider
+
+from agentflow.config import DEFAULT
 
 class Agent(BaseModel):
     _REPR_ATTRS = [
@@ -18,10 +20,16 @@ class Agent(BaseModel):
 
     @staticmethod
     def load(fpath):
-        return Agent()
+        metadata = upy.load_config(fpath)
+        print(metadata)
+        return Agent(name)
     
     def run(self, input=None):
         """
         Run Agent.
         """
         pass
+
+    def __call__(self, input=None):
+        return self.run(input)
+    

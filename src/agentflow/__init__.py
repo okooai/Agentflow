@@ -40,4 +40,7 @@ def get_version_str():
     version = "%s%s" % (__version__, " (%s)" % __build__ if __build__ else "")
     return version
 
-from agentflow.agentflow import hub
+from agentflow.model.hub import (
+    hub,
+    ahub
+)

@@ -8,7 +8,7 @@ from agentflow.model  import (
 from agentflow.config import CONST, DEFAULT
 
 class Hub(BaseModel):
-    def get(self, name,
+    async def aget(self, name,
         cache=True,
     ):
         af_file_ext = CONST["FILE_EXT"]
@@ -31,9 +31,9 @@ class Hub(BaseModel):
 
         return Agent.load(af_file_path_target)
 
-def hub(name):
+async def ahub(*args, **kwargs):
     hub_ = Hub()
-    return hub_.get(name)
+    return await hub_.aget(*args, **kwargs)
 
-async def ahub(name):
-    pass
+def hub(*args, **kwargs):
+    return upy.run_async(ahub(*args, **kwargs))
