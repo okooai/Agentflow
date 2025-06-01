@@ -7,11 +7,10 @@ _DESCRIPTION_JUMBOTRON = """
 
 %s
 """ % (
-    upy.cli_format(__name__, upy.CLI_RED),
-    upy.cli_format(__version__, upy.CLI_BOLD),
+    upy.cli_format(__name__,        upy.CLI_RED),
+    upy.cli_format(__version__,     upy.CLI_BOLD),
     upy.cli_format(__description__, upy.CLI_BOLD),
 )
-
 
 def get_parser():
     parser = upy.get_base_parser(__command__, _DESCRIPTION_JUMBOTRON)
@@ -37,6 +36,13 @@ def get_parser():
                     "type": str
                 }
             },
+            "kwargs": {
+                "interactive": {
+                    "flag": "--interactive",
+                    "help": "Run the Agent in interactive mode",
+                    "action": "store_true",
+                }
+            }
         },
     })
     return parser

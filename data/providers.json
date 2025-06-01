@@ -1,6 +1,10 @@
 {
     "openai/gpt-4.1": {
-        "auth": "api_key",
-        "alias": "openai"
+        "alias": "openai",
+        "url": "https://api.openai.com/v1",
+        "auth_type": "api_key",
+        "endpoints": {
+            "chat": "/chat/completions"
+        }
     }
 }

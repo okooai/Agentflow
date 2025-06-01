@@ -24,7 +24,6 @@ ARGUMENTS = dict(
     name            = None,
 )
 
-
 @cli_command
 def command(**ARGUMENTS):
     try:
@@ -46,7 +45,6 @@ An error occured while performing the above command. This could be an issue with
         else:
             raise e
 
-
 def to_params(kwargs):
     class O(object):
         pass
@@ -61,7 +59,6 @@ def to_params(kwargs):
 
     return params
 
-
 async def _command(*args, **kwargs):
     a = to_params(kwargs)
 
@@ -73,6 +70,10 @@ async def _command(*args, **kwargs):
     if file_:
         upy.touch(file_)
 
-    if a.command_1 == "get":
-        from agentflow.model.hub import ahub
+    from agentflow.model.hub import ahub
+
+    if   a.command_1 == "get":
         await ahub(*a.name, fail=not a.ignore_errors, verbose=a.verbose)
+    elif a.command_1 == "run":
+        agent = await ahub(a.name, fail=not a.ignore_errors, verbose=a.verbose)
+        await agent.arun(interactive=a.interactive)

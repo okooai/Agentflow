@@ -11,12 +11,14 @@ PATH["DATA"] = upy.join2(PATH["BASE"], "data", path=True)
 PATH["CACHE"] = upy.get_config_path(NAME)
 
 CONST = {
-    "AF_FILENAME":          "Agentfile",
-    "AF_TAG":               "latest",
-    "AF_URL_REPO_BASE":     "https://github.com",
-    "AF_NAMESPACE":         "okooai",
-    "AF_URL_DATA":          "<todo>",
-    "AF_HUB_NAME_PATTERN":  r"^(?:(?P<namespace>[\w-]+)/)?(?P<name>[\w-]+)(?::(?P<tag>[\w-]+))?$",
+    "AF_FILENAME":              "Agentfile",
+    "AF_TAG":                   "latest",
+    "AF_URL_REPO_BASE":         "https://github.com",
+    "AF_NAMESPACE":             "okooai",
+    "AF_URL_DATA":              "https://raw.githubusercontent.com/okooai/Agentflow/refs/heads/develop/data",
+    "AF_NAME_PATTERN_AGENT":    r"^(?:(?P<namespace>[\w-]+)/)?(?P<name>[\w-]+)(?::(?P<tag>[\w-]+))?$",
+    "AF_NAME_PATTERN_PROVIDER": r"^(?P<namespace>[\w-]+)/(?P<name>[\w.-]+)$",
+    "AF_CACHE_PROVIDERS":       upy.join2(PATH["CACHE"], "providers.json", path=True)
 }
 CONST["AF_URL_PROVIDERS"] = upy.join2(CONST["AF_URL_DATA"], "providers.json", path=True)
 

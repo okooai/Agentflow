@@ -6,7 +6,7 @@ from agentflow.exception import AgentflowError
 
 class Hub(BaseModel):
     def _resolve_agent_uri(self, uri):
-        match = re.match(CONST["AF_HUB_NAME_PATTERN"], uri)
+        match = re.match(CONST["AF_NAME_PATTERN_AGENT"], uri)
         if not match:
             raise ValueError(f"Invalid Agent URI format: {uri}")
 

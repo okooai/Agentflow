@@ -3,7 +3,18 @@ import upyog as upy
 from agentflow.model.base import BaseModel
 from agentflow.model.provider import provider
 
-from agentflow.config import DEFAULT
+from agentflow.config import CONST, DEFAULT
+
+class AgentConsole(upy.Console):
+    def __init__(self, agent, *args, **kwargs):
+        super_ = super(AgentConsole, self)
+        super_.__init__(*args, **kwargs)
+
+        self.agent = agent
+
+    async def ahandle(self, input):
+        provider = self.agent._provider
+        return await provider.chat(input)
 
 class Agent(BaseModel):
     _REPR_ATTRS = ("id", "name")
@@ -19,11 +30,16 @@ class Agent(BaseModel):
         metadata = upy.load_config(fpath)
         return Agent(name=metadata.get("name") or name)
 
-    def run(self, input=None):
+    async def arun(self, input=None, interactive=False, **kwargs):
         """
         Run Agent.
         """
-        pass
+        if interactive:
+            console = AgentConsole(self)
+            await console.arun()
 
-    def __call__(self, input=None):
-        return self.run(input)
+    def run(self, *args, **kwargs):
+        return upy.run_async(self.arun(*args, **kwargs))
+
+    async def __call__(self, *args, **kwargs):
+        return await self.arun(*args, **kwargs)
