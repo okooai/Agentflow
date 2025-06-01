@@ -18,7 +18,8 @@ CONST = {
     "AF_URL_DATA":              "https://raw.githubusercontent.com/okooai/Agentflow/refs/heads/develop/data",
     "AF_NAME_PATTERN_AGENT":    r"^(?:(?P<namespace>[\w-]+)/)?(?P<name>[\w-]+)(?::(?P<tag>[\w-]+))?$",
     "AF_NAME_PATTERN_PROVIDER": r"^(?P<namespace>[\w-]+)/(?P<name>[\w.-]+)$",
-    "AF_CACHE_PROVIDERS":       upy.join2(PATH["CACHE"], "providers.json", path=True)
+    "AF_CACHE_PROVIDERS":       upy.join2(PATH["CACHE"], "providers.json", path=True),
+    "AF_ENVVAR_PREFIX":         "AF",
 }
 CONST["AF_URL_PROVIDERS"] = upy.join2(CONST["AF_URL_DATA"], "providers.json", path=True)
 

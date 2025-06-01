@@ -6,19 +6,69 @@ from agentflow.config import CONST
 
 class Provider(BaseModel):
     def __init__(self,
-        namespace=None, name=None,
+        namespace=None, name=None, url=None, endpoints=None,
         auth_type=None, **kwargs
     ):
         super_ = super(BaseModel, self)
         super_.__init__(
-            namespace=namespace, name=name,
+            namespace=namespace, name=name, url=url, endpoints=endpoints,
             auth_type=auth_type, **kwargs
         )
 
         self._session = httpx.AsyncClient()
 
+    def _build_request_url(self, type_):
+        endpoint = self.endpoints[type_]
+        url      = f"{self.url}{endpoint}"
+        return url
+    
+    def _build_envvar(self, key):
+        return upy.getenvvar(f"{upy.upper(self.namespace)}_{upy.upper(key)}",
+            prefix=CONST["AF_ENVVAR_PREFIX"])
+    
+    def _build_request_headers(self):
+        auth_type = self.auth_type
+        headers   = self._session.headers.copy()
+
+        if auth_type == "api_key":
+            envvar    = self._build_envvar("api_key")
+            api_key   = upy.getenv(envvar)
+            
+            headers["Authorization"] = f"Bearer {api_key}"
+        else:
+            raise NotImplementedError(
+                f"Auth type '{auth_type}' is not implemented."
+            )
+
+        return headers
+
+    def _build_request_data(self, input=None):
+        body = {
+            "model": self.name,
+            "messages": [
+                {"role": "user", "content": input}
+            ]
+        }
+
+        return body
+
     async def achat(self, input=None):
-        print(input)
+        url     = self._build_request_url("chat")
+        headers = self._build_request_headers()
+        body    = self._build_request_data(input)
+
+        response = await self._session.request("post", url, headers=headers,
+            json=body)
+        response.raise_for_status()
+
+        data    = response.json()
+
+        return {
+            "content": data["choices"][0]["message"]["content"]
+        }
+
+    def chat(self, *args, **kwargs):
+        return upy.run_async(self.achat(*args, **kwargs))
 
 def _resolve_provider_name(provider):
     match = re.match(CONST["AF_NAME_PATTERN_PROVIDER"], provider)
@@ -57,5 +107,7 @@ def provider(name):
     return Provider(
         namespace = meta["namespace"],
         name      = meta["name"],
+        url       = meta["url"],
+        endpoints = meta["endpoints"],
         auth_type = meta["auth_type"],
     )

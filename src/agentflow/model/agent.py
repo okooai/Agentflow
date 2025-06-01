@@ -3,7 +3,7 @@ import upyog as upy
 from agentflow.model.base import BaseModel
 from agentflow.model.provider import provider
 
-from agentflow.config import CONST, DEFAULT
+from agentflow.config import DEFAULT
 
 class AgentConsole(upy.Console):
     def __init__(self, agent, *args, **kwargs):
@@ -14,7 +14,8 @@ class AgentConsole(upy.Console):
 
     async def ahandle(self, input):
         provider = self.agent._provider
-        return await provider.chat(input)
+        response = await provider.achat(input)
+        return response["content"]
 
 class Agent(BaseModel):
     _REPR_ATTRS = ("id", "name")
