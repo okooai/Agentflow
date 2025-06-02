@@ -2,7 +2,7 @@ import os.path as osp, re, upyog as upy
 import httpx
 
 from agentflow.model.base import BaseModel
-from agentflow.config import CONST
+from agentflow.config import CONST, DEFAULT
 
 class Provider(BaseModel):
     def __init__(self,
@@ -31,9 +31,9 @@ class Provider(BaseModel):
         headers   = self._session.headers.copy()
 
         if auth_type == "api_key":
-            envvar    = self._build_envvar("api_key")
-            api_key   = upy.getenv(envvar)
-            
+            envvar  = self._build_envvar("api_key")
+            api_key = upy.getenv(envvar)
+
             headers["Authorization"] = f"Bearer {api_key}"
         else:
             raise NotImplementedError(
@@ -42,30 +42,57 @@ class Provider(BaseModel):
 
         return headers
 
-    def _build_request_data(self, input=None):
+    def _build_request_data(self, input=None, stream=True, role=None):
+        roles = []
+        if role:
+            for key, content in upy.iteritems(role):
+                roles.append({"role": key, "content": content})
+
         body = {
             "model": self.name,
-            "messages": [
+            "messages": roles + [
                 {"role": "user", "content": input}
-            ]
+            ],
+            "stream": stream
         }
 
         return body
 
-    async def achat(self, input=None):
+    async def achat(self, input=None, stream=True, role=None):
         url     = self._build_request_url("chat")
         headers = self._build_request_headers()
-        body    = self._build_request_data(input)
-
-        response = await self._session.request("post", url, headers=headers,
-            json=body)
-        response.raise_for_status()
-
-        data    = response.json()
-
-        return {
-            "content": data["choices"][0]["message"]["content"]
+        body    = self._build_request_data(input, stream=stream, role=role)
+        
+        session_args = {
+            "method": "post", "url": url, "headers": headers,
+            "json": body, "timeout": DEFAULT["AF_PROVIDER_TIMEOUT"]
         }
+
+        if stream:
+            async with self._session.stream(**session_args) as response:
+                response.raise_for_status()
+
+                prefix = "data: "
+                async for chunk in response.aiter_lines():
+                    chunk = upy.safe_decode(chunk)
+                    chunk = upy.strip(chunk)
+
+                    if chunk.startswith(prefix):
+                        payload = upy.strip(chunk[len(prefix):])
+                        if payload != "[DONE]":
+                            data    = upy.load_json(payload)
+                            content = data["choices"][0]["delta"].get("content")
+                            if content:
+                                yield {"content": content}
+        else:
+            response = await self._session.request(**session_args)
+            response.raise_for_status()
+
+            data = response.json()
+
+            content = data["choices"][0]["message"]["content"]
+
+            yield {"content": content}
 
     def chat(self, *args, **kwargs):
         return upy.run_async(self.achat(*args, **kwargs))

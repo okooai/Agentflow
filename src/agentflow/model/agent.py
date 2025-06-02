@@ -13,9 +13,20 @@ class AgentConsole(upy.Console):
         self.agent = agent
 
     async def ahandle(self, input):
-        provider = self.agent._provider
-        response = await provider.achat(input)
-        return response["content"]
+        provider  = self.agent._provider
+        objective = self.agent.objective
+
+        async for response in provider.achat(
+            input,
+            role   = { "system": objective },
+            stream = True
+        ):
+            upy.echo(
+                upy.cli_format(
+                    response["content"], upy.CLI_BLUE
+                )
+            , nl=False)
+        upy.echo()
 
 class Agent(BaseModel):
     _REPR_ATTRS = ("id", "name")
@@ -24,20 +35,32 @@ class Agent(BaseModel):
         super_ = super(BaseModel, self)
         super_.__init__(*args, **kwargs)
 
-        self._provider = provider(kwargs.get("provider") or DEFAULT["AF_PROVIDER"])
+        self._provider = provider(
+            kwargs.get("provider") or DEFAULT["AF_PROVIDER"]
+        )
 
     @staticmethod
     def load(name, fpath):
         metadata = upy.load_config(fpath)
-        return Agent(name=metadata.get("name") or name)
+        return Agent(
+            name      = metadata.get("name") or name,
+            objective = metadata["objective"],
+        )
 
-    async def arun(self, input=None, interactive=False, **kwargs):
+    async def arun(self, input=None, interactive=False, stream=False, **kwargs):
         """
         Run Agent.
         """
         if interactive:
             console = AgentConsole(self)
             await console.arun()
+        else:
+            async for response in self._provider.achat(
+                input,
+                role   = { "system": self.objective },
+                stream = stream
+            ):
+                return response["content"]
 
     def run(self, *args, **kwargs):
         return upy.run_async(self.arun(*args, **kwargs))

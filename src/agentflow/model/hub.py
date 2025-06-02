@@ -33,7 +33,7 @@ class Hub(BaseModel):
 
         url    = upy.join2(meta["url"], meta["namespace"], meta["name"], path=True)
         target = upy.join2(
-            DEFAULT["AF_CACHE_HUB"],
+            CONST["AF_CACHE_AGENTS"],
             meta["namespace"],
             meta["name"],
             path=True

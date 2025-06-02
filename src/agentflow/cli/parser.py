@@ -34,12 +34,22 @@ def get_parser():
                 "name": {
                     "help": "Name of the Agent to run",
                     "type": str
+                },
+                "input": {
+                    "help": "Input to the Agent",
+                    "type": str,
+                    "nargs": "?",
                 }
             },
             "kwargs": {
                 "interactive": {
-                    "flag": "--interactive",
+                    "flag": ("-it", "--interactive"),
                     "help": "Run the Agent in interactive mode",
+                    "action": "store_true",
+                },
+                "stream": {
+                    "flag": "--stream",
+                    "help": "Stream the Agent's response",
                     "action": "store_true",
                 }
             }

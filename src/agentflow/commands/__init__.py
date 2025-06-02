@@ -75,5 +75,10 @@ async def _command(*args, **kwargs):
     if   a.command_1 == "get":
         await ahub(*a.name, fail=not a.ignore_errors, verbose=a.verbose)
     elif a.command_1 == "run":
-        agent = await ahub(a.name, fail=not a.ignore_errors, verbose=a.verbose)
-        await agent.arun(interactive=a.interactive)
+        agent    = await ahub(a.name, fail=not a.ignore_errors, verbose=a.verbose)
+        if a.input or a.interactive:
+            response = await agent.arun(
+                input=a.input, interactive=a.interactive, stream=a.stream)
+
+            if not a.interactive:
+                upy.echo(cli_format(response, upy.CLI_BLUE))

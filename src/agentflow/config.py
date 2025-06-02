@@ -14,16 +14,19 @@ CONST = {
     "AF_FILENAME":              "Agentfile",
     "AF_TAG":                   "latest",
     "AF_URL_REPO_BASE":         "https://github.com",
-    "AF_NAMESPACE":             "okooai",
+    "AF_NAMESPACE":             "okooai-hub",
     "AF_URL_DATA":              "https://raw.githubusercontent.com/okooai/Agentflow/refs/heads/develop/data",
     "AF_NAME_PATTERN_AGENT":    r"^(?:(?P<namespace>[\w-]+)/)?(?P<name>[\w-]+)(?::(?P<tag>[\w-]+))?$",
     "AF_NAME_PATTERN_PROVIDER": r"^(?P<namespace>[\w-]+)/(?P<name>[\w.-]+)$",
     "AF_CACHE_PROVIDERS":       upy.join2(PATH["CACHE"], "providers.json", path=True),
     "AF_ENVVAR_PREFIX":         "AF",
 }
-CONST["AF_URL_PROVIDERS"] = upy.join2(CONST["AF_URL_DATA"], "providers.json", path=True)
+CONST["AF_URL_PROVIDERS"] =     upy.join2(CONST["AF_URL_DATA"], "providers.json", path=True)
 
 DEFAULT = {
-    "AF_CACHE_HUB": upy.join2(PATH["CACHE"], "hub", path=True),
-    "AF_PROVIDER":  "openai",
+    "AF_CACHE_HUB":             upy.join2(PATH["CACHE"], "hub", path=True),
+    "AF_PROVIDER":              "openai",
+    "AF_PROVIDER_TIMEOUT":      30,
 }
+CONST["AF_CACHE_AGENTS"]  =     upy.join2(DEFAULT["AF_CACHE_HUB"], "agents", path=True)
+CONST["AF_CACHE_ACTIONS"] =     upy.join2(DEFAULT["AF_CACHE_HUB"], "actions", path=True)

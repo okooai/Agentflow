@@ -14,3 +14,6 @@ def get_version():
     return version
 
 from agentflow.model.hub import hub, ahub
+from agentflow.util import (
+    arequest
+)
