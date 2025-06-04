@@ -42,7 +42,8 @@ class Provider(BaseModel):
 
         return headers
 
-    def _build_request_data(self, input=None, stream=True, role=None):
+    def _build_request_data(self, input=None, stream=True, role=None,
+        tools=None):
         roles = []
         if role:
             for key, content in upy.iteritems(role):
@@ -56,12 +57,17 @@ class Provider(BaseModel):
             "stream": stream
         }
 
+        if tools:
+            body["tools"] = tools
+
         return body
 
-    async def achat(self, input=None, stream=True, role=None):
+    async def achat(self, input=None, stream=True, role=None, tools=None):
         url     = self._build_request_url("chat")
         headers = self._build_request_headers()
-        body    = self._build_request_data(input, stream=stream, role=role)
+        body    = self._build_request_data(input, stream=stream, role=role,
+            tools=tools
+        )
         
         session_args = {
             "method": "post", "url": url, "headers": headers,

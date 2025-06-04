@@ -6,17 +6,18 @@ from agentflow.__attr__ import __name__ as NAME
 
 PATH = dict()
 
-PATH["BASE"] = upy.pardir(__file__, 1)
-PATH["DATA"] = upy.join2(PATH["BASE"], "data", path=True)
+PATH["BASE"]  = upy.pardir(__file__, 1)
+PATH["DATA"]  = upy.join2(PATH["BASE"], "data", path=True)
 PATH["CACHE"] = upy.get_config_path(NAME)
 
 CONST = {
-    "AF_FILENAME":              "Agentfile",
+    "AF_FILENAME_AGENT":        "Agentfile",
+    "AF_FILENAME_ACTION":       "action.yml",
     "AF_TAG":                   "latest",
     "AF_URL_REPO_BASE":         "https://github.com",
     "AF_NAMESPACE":             "okooai-hub",
     "AF_URL_DATA":              "https://raw.githubusercontent.com/okooai/Agentflow/refs/heads/develop/data",
-    "AF_NAME_PATTERN_AGENT":    r"^(?:(?P<namespace>[\w-]+)/)?(?P<name>[\w-]+)(?::(?P<tag>[\w-]+))?$",
+    "AF_NAME_PATTERN":          r"^(?:(?P<namespace>[\w-]+)/)?(?P<name>[\w-]+)(?::(?P<tag>[\w-]+))?$",
     "AF_NAME_PATTERN_PROVIDER": r"^(?P<namespace>[\w-]+)/(?P<name>[\w.-]+)$",
     "AF_CACHE_PROVIDERS":       upy.join2(PATH["CACHE"], "providers.json", path=True),
     "AF_ENVVAR_PREFIX":         "AF",
@@ -28,5 +29,3 @@ DEFAULT = {
     "AF_PROVIDER":              "openai",
     "AF_PROVIDER_TIMEOUT":      30,
 }
-CONST["AF_CACHE_AGENTS"]  =     upy.join2(DEFAULT["AF_CACHE_HUB"], "agents", path=True)
-CONST["AF_CACHE_ACTIONS"] =     upy.join2(DEFAULT["AF_CACHE_HUB"], "actions", path=True)

@@ -1,9 +1,10 @@
 import upyog as upy
 
-from agentflow.model.base import BaseModel
-from agentflow.model.provider import provider
-
-from agentflow.config import DEFAULT
+from agentflow.model.base       import BaseModel
+from agentflow.model.action     import Action
+from agentflow.model.provider   import provider
+from agentflow.model.helper     import HubMixin
+from agentflow.config           import DEFAULT
 
 class AgentConsole(upy.Console):
     def __init__(self, agent, *args, **kwargs):
@@ -19,6 +20,7 @@ class AgentConsole(upy.Console):
         async for response in provider.achat(
             input,
             role   = { "system": objective },
+            tools  = self.agent._build_schema_tools(),
             stream = True
         ):
             upy.echo(
@@ -28,7 +30,7 @@ class AgentConsole(upy.Console):
             , nl=False)
         upy.echo()
 
-class Agent(BaseModel):
+class Agent(BaseModel, HubMixin):
     _REPR_ATTRS = ("id", "name")
 
     def __init__(self, *args, **kwargs):
@@ -38,6 +40,7 @@ class Agent(BaseModel):
         self._provider = provider(
             kwargs.get("provider") or DEFAULT["AF_PROVIDER"]
         )
+        self._actions  = kwargs.get("actions") or []
 
     @staticmethod
     def load(name, fpath):
@@ -45,9 +48,35 @@ class Agent(BaseModel):
         return Agent(
             name      = metadata.get("name") or name,
             objective = metadata["objective"],
+            actions   = metadata.get("actions")
         )
 
-    async def arun(self, input=None, interactive=False, stream=False, **kwargs):
+    async def ainstall(self, **kwargs):
+        self.log("info", f"Installing Agent '{self.name}'")
+
+        if self._actions:
+            actions         = [Action(name=action) for action in self._actions]
+            kwargs["fail"]  = kwargs.get("fail") or True
+
+            actions = await upy.run_async_all(
+                (action.aget(**kwargs) for action in actions),
+            )
+            self._actions   = {
+                action.name: action for action in actions
+            }
+
+    def _build_schema_tools(self):
+        return [{
+            "type": "function",
+            "function": {
+                "name": name,
+                "description": action.description,
+                "parameters": {}
+            }
+        } for name, action in upy.iteritems(self._actions)]
+
+    async def arun(self, input=None, interactive=False, stream=False,
+        **kwargs):
         """
         Run Agent.
         """
@@ -58,6 +87,7 @@ class Agent(BaseModel):
             async for response in self._provider.achat(
                 input,
                 role   = { "system": self.objective },
+                tools  = self._build_schema_tools(),
                 stream = stream
             ):
                 return response["content"]

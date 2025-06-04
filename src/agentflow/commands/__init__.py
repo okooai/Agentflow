@@ -4,8 +4,8 @@ from __future__ import absolute_import
 import upyog as upy
 
 from agentflow.commands.util import cli_format
-from agentflow.cli import command as cli_command
-from agentflow.__attr__ import __name__
+from agentflow.cli           import command as cli_command
+from agentflow.__attr__      import __name__
 
 logger = upy.get_logger(level=upy.LOG_DEBUG)
 

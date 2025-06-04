@@ -10,8 +10,8 @@ from setuptools.command.develop import develop
 from setuptools.command.install import install
 
 # globals
-PACKAGE     = "agentflow"
-SRCDIR      = "src"
+PACKAGE = "agentflow"
+SRCDIR  = "src"
 
 # A very awful patch for parse_requirements from pip
 def parse_requirements(filename, session = None):
@@ -86,7 +86,7 @@ def remove_cache():
     pkgname = PKGINFO["__name__"]
 
     paths = [
-        osp.join(userdir, ".%s" % pkgname), # backward-compatibility
+        osp.join(userdir, ".%s" %    pkgname), # backward-compatibility
         osp.join(userdir, ".config", pkgname)
     ]
 
@@ -138,10 +138,8 @@ metadata = dict(
         "Environment :: Console",
         "Intended Audience :: Developers",
         "License :: OSI Approved :: MIT License",
-        
         "Programming Language :: Python :: 2",
         "Programming Language :: Python :: 2.7",
-        
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.4",
         "Programming Language :: Python :: 3.5",

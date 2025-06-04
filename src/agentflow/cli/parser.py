@@ -1,6 +1,11 @@
 import upyog as upy
 
-from agentflow.__attr__ import __name__, __version__, __description__, __command__
+from agentflow.__attr__ import (
+    __name__,
+    __version__,
+    __description__,
+    __command__
+)
 
 _DESCRIPTION_JUMBOTRON = """
 %s (v %s)
