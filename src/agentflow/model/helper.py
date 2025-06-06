@@ -102,5 +102,3 @@ class HubMixin:
                 raise AgentflowError(errstr)
 
         return upy.squash(repos)
-
-    

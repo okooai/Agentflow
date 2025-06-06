@@ -6,6 +6,13 @@ from agentflow.model.provider   import provider
 from agentflow.model.helper     import HubMixin
 from agentflow.config           import DEFAULT
 
+class Session(BaseModel):
+    def __init__(self, *args, **kwargs):
+        super_ = super(BaseModel, self)
+        super_.__init__(*args, **kwargs)
+        
+        self._session_id = upy.get_random_str(8)
+
 class AgentConsole(upy.Console):
     def __init__(self, agent, *args, **kwargs):
         super_ = super(AgentConsole, self)
@@ -23,24 +30,47 @@ class AgentConsole(upy.Console):
             tools  = self.agent._build_schema_tools(),
             stream = True
         ):
-            upy.echo(
-                upy.cli_format(
-                    response["content"], upy.CLI_BLUE
-                )
-            , nl=False)
+            tools = response.get("tools")
+            if tools:
+                for tool in tools:
+                    action = self.agent.actions[tool]
+
+                    upy.echo(
+                        upy.cli_format(
+                            f"[a]: {action.name}",
+                            upy.CLI_GRAY
+                        )
+                    )
+
+                    result = await action.arun()
+
+                    upy.echo(
+                        upy.cli_format(
+                            f"[o]: {upy.ellipsis(result, 50)}",
+                            upy.CLI_GRAY
+                        )
+                    )
+
+            if response["content"]:
+                upy.echo(
+                    upy.cli_format(
+                        response["content"], upy.CLI_BLUE
+                    )
+                , nl=False)
         upy.echo()
 
 class Agent(BaseModel, HubMixin):
     _REPR_ATTRS = ("id", "name")
 
     def __init__(self, *args, **kwargs):
+        self._actions  = kwargs.pop("actions") or []
+
         super_ = super(BaseModel, self)
         super_.__init__(*args, **kwargs)
 
         self._provider = provider(
             kwargs.get("provider") or DEFAULT["AF_PROVIDER"]
         )
-        self._actions  = kwargs.get("actions") or []
 
     @staticmethod
     def load(name, fpath):
@@ -55,13 +85,13 @@ class Agent(BaseModel, HubMixin):
         self.log("info", f"Installing Agent '{self.name}'")
 
         if self._actions:
-            actions         = [Action(name=action) for action in self._actions]
+            actions = [Action(name=action) for action in self._actions]
             kwargs["fail"]  = kwargs.get("fail") or True
 
             actions = await upy.run_async_all(
                 (action.aget(**kwargs) for action in actions),
             )
-            self._actions   = {
+            self.actions    = {
                 action.name: action for action in actions
             }
 
@@ -69,11 +99,11 @@ class Agent(BaseModel, HubMixin):
         return [{
             "type": "function",
             "function": {
-                "name": name,
+                "name": action.name,
                 "description": action.description,
                 "parameters": {}
             }
-        } for name, action in upy.iteritems(self._actions)]
+        } for action in upy.itervalues(self.actions)]
 
     async def arun(self, input=None, interactive=False, stream=False,
         **kwargs):

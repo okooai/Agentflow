@@ -86,10 +86,26 @@ class Provider(BaseModel):
                     if chunk.startswith(prefix):
                         payload = upy.strip(chunk[len(prefix):])
                         if payload != "[DONE]":
-                            data    = upy.load_json(payload)
-                            content = data["choices"][0]["delta"].get("content")
-                            if content:
-                                yield {"content": content}
+                            data  = upy.load_json(payload)
+                            delta = data["choices"][0]["delta"]
+
+                            content = delta.get("content")
+                            tools   = delta.get("tool_calls")
+                            
+                            result  = {"content": content}
+
+                            if tools:
+                                names = []
+
+                                for tool in tools:
+                                    name = upy.getattr2(tool, "function.name")
+                                    if name:
+                                        names.append(name)
+
+                                if names:
+                                    result["tools"] = names
+
+                            yield result
         else:
             response = await self._session.request(**session_args)
             response.raise_for_status()
