@@ -3,15 +3,9 @@ import upyog as upy
 from agentflow.model.base       import BaseModel
 from agentflow.model.action     import Action
 from agentflow.model.provider   import provider
+from agentflow.model.session    import Session
 from agentflow.model.helper     import HubMixin
 from agentflow.config           import DEFAULT
-
-class Session(BaseModel):
-    def __init__(self, *args, **kwargs):
-        super_ = super(BaseModel, self)
-        super_.__init__(*args, **kwargs)
-        
-        self._session_id = upy.get_random_str(8)
 
 class AgentConsole(upy.Console):
     def __init__(self, agent, *args, **kwargs):
@@ -22,6 +16,7 @@ class AgentConsole(upy.Console):
 
     async def ahandle(self, input):
         provider  = self.agent._provider
+        session   = self.agent._session
         objective = self.agent.objective
 
         async for response in provider.achat(
@@ -57,6 +52,7 @@ class AgentConsole(upy.Console):
                         response["content"], upy.CLI_BLUE
                     )
                 , nl=False)
+
         upy.echo()
 
 class Agent(BaseModel, HubMixin):
@@ -71,6 +67,7 @@ class Agent(BaseModel, HubMixin):
         self._provider = provider(
             kwargs.get("provider") or DEFAULT["AF_PROVIDER"]
         )
+        self._session  = Session()
 
     @staticmethod
     def load(name, fpath):
@@ -101,7 +98,18 @@ class Agent(BaseModel, HubMixin):
             "function": {
                 "name": action.name,
                 "description": action.description,
-                "parameters": {}
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        param: {
+                            "type": "string",
+                            "description": meta["description"],
+                        } for param, meta in upy.iteritems(action.parameters)
+                    },
+                    "required": [
+                        param for param in upy.iterkeys(action.parameters)
+                    ]
+                }
             }
         } for action in upy.itervalues(self.actions)]
 
@@ -112,7 +120,7 @@ class Agent(BaseModel, HubMixin):
         """
         if interactive:
             console = AgentConsole(self)
-            await console.arun()
+            await console.arun(input=input)
         else:
             async for response in self._provider.achat(
                 input,

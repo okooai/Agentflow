@@ -36,6 +36,7 @@ class Action(BaseModel, HubMixin):
         return Action(
             name        = config["name"],
             description = config["description"],
+            parameters  = config.get("parameters") or {},
             config_path = fpath,
         )
 
