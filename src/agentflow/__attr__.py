@@ -76,5 +76,5 @@ __description__ = (
     "Agentflow is a simple, yet powerful agentic framework, built for humans."
 )
 __keywords__    = ["yet", "another", "agent", "framework"]
-__url__         = "https://github.com/achillesrasquinha/agentflow"
+__url__         = "https://github.com/okooai/Agentflow"
 __license__     = "MIT License"

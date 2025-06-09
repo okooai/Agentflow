@@ -3,14 +3,14 @@ Agentflow: Agents, for Humans
 
 Release v\ |version|. (:ref:`Installation <install>`)
 
-.. image:: https://img.shields.io/coveralls/github/achillesrasquinha/agentflow.svg?style=flat-square
-    :target: https://coveralls.io/github/achillesrasquinha/agentflow
+.. image:: https://img.shields.io/coveralls/github/okooai/agentflow.svg?style=flat-square
+    :target: https://coveralls.io/github/okooai/agentflow
 
 .. image:: https://img.shields.io/pypi/pyversions/agentflow.svg?style=flat-square
     :target: https://pypi.org/project/agentflow/
 
-.. .. image:: https://img.shields.io/docker/build/achillesrasquinha/agentflow.svg?style=flat-square&logo=docker
-..     :target: https://hub.docker.com/r/achillesrasquinha/agentflow
+.. .. image:: https://img.shields.io/docker/build/okooai/agentflow.svg?style=flat-square&logo=docker
+..     :target: https://hub.docker.com/r/okooai/agentflow
 
 .. image:: https://img.shields.io/badge/made%20with-boilpy-red.svg?style=flat-square
     :target: https://git.io/boilpy

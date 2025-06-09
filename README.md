@@ -7,20 +7,20 @@
 </div>
 
 <p align="center">
-    <a href='https://github.com/achillesrasquinha/agentflow//actions?query=workflow:"Continuous Integration"'>
-      <img src="https://img.shields.io/github/actions/workflow/status/achillesrasquinha/agentflow/ci.yml?style=flat-square">
+    <a href='https://github.com/okooai/Agentflow/actions?query=workflow:"Continuous Integration"'>
+      <img src="https://img.shields.io/github/actions/workflow/status/okooai/Agentflow/ci.yml?style=flat-square">
     </a>
-    <a href="https://coveralls.io/github/achillesrasquinha/agentflow">
-      <img src="https://img.shields.io/coveralls/github/achillesrasquinha/agentflow.svg?style=flat-square">
+    <a href="https://coveralls.io/github/okooai/Agentflow">
+      <img src="https://img.shields.io/coveralls/github/okooai/Agentflow.svg?style=flat-square">
     </a>
-    <a href="https://pypi.org/project/agentflow/">
-      <img src="https://img.shields.io/pypi/v/agentflow.svg?style=flat-square">
+    <a href="https://pypi.org/project/Agentflow/">
+      <img src="https://img.shields.io/pypi/v/Agentflow.svg?style=flat-square">
     </a>
-    <a href="https://pypi.org/project/agentflow/">
-      <img src="https://img.shields.io/pypi/l/agentflow.svg?style=flat-square">
+    <a href="https://pypi.org/project/Agentflow/">
+      <img src="https://img.shields.io/pypi/l/Agentflow.svg?style=flat-square">
     </a>
-    <a href="https://pypi.org/project/agentflow/">
-		  <img src="https://img.shields.io/pypi/pyversions/agentflow.svg?style=flat-square">
+    <a href="https://pypi.org/project/Agentflow/">
+		  <img src="https://img.shields.io/pypi/pyversions/Agentflow.svg?style=flat-square">
 	  </a>
     <a href="https://git.io/boilpy">
       <img src="https://img.shields.io/badge/made%20with-boilpy-red.svg?style=flat-square">
@@ -82,7 +82,7 @@ Using `agentflow's` Docker Image can be done as follows:
 $ docker run \
     --rm \
     -it \
-    ghcr.io/achillesrasquinha/agentflow \
+    ghcr.io/okooai/agentflow \
       --verbose
 ```
 

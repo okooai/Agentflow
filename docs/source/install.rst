@@ -15,13 +15,13 @@ For instructions on installing python and pip see “The Hitchhiker’s Guide to
 
 #### Building from source
 
-`agentflow` is actively developed on [https://github.com](https://github.com/achillesrasquinha/agentflow)
+`agentflow` is actively developed on [https://github.com](https://github.com/okooai/Agentflow)
 and is always avaliable.
 
 You can clone the base repository with git as follows:
 
 ```shell
-$ git clone https://github.com/achillesrasquinha/agentflow
+$ git clone https://github.com/okooai/Agentflow
 ```
 
 Optionally, you could download the tarball or zipball as follows:
@@ -29,13 +29,13 @@ Optionally, you could download the tarball or zipball as follows:
 ##### For Linux Users
 
 ```shell
-$ curl -OL https://github.com/achillesrasquinha/tarball/agentflow
+$ curl -OL https://github.com/okooai/tarball/Agentflow
 ```
 
 ##### For Windows Users
 
 ```shell
-$ curl -OL https://github.com/achillesrasquinha/zipball/agentflow
+$ curl -OL https://github.com/okooai/zipball/agentflow
 ```
 
 Install necessary dependencies

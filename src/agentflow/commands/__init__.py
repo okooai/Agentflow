@@ -38,7 +38,7 @@ def command(**ARGUMENTS):
                 cli_format(
                     """\
 An error occured while performing the above command. This could be an issue with
-"agentflow". Kindly post an issue at https://github.com/achillesrasquinha/agentflow/issues""",
+"agentflow". Kindly post an issue at https://github.com/okooai/Agentflow/issues""",
                     upy.CLI_RED,
                 )
             )
