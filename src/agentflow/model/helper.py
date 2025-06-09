@@ -42,10 +42,10 @@ class HubMixin:
         )
 
         if not osp.exists(target):
-            upy.git_clone(url, target, depth=1, verbose=verbose)
+            upy.git_clone(url, target, depth=1, verbose=False)
         else:
             upy.update_git_repo(
-                target, clone=False, url=url
+                target, clone=False, url=url, verbose=False
             )
 
         return target

@@ -18,7 +18,7 @@ class AgentConsole(upy.Console):
 
         self.agent = agent
 
-    async def ahandle(self, input_):
+    async def ahandle(self, input_=None):
         provider  = self.agent._provider
         session   = self.agent._session
         objective = self.agent.objective
@@ -64,6 +64,8 @@ class AgentConsole(upy.Console):
                         actions = actions
                     )
                 )
+
+                await self.ahandle()
             else:
                 # TODO: handle when both content and tools are provided.
                 content = response.get("content")
@@ -97,6 +99,19 @@ class Agent(BaseModel, HubMixin):
             kwargs.get("provider") or DEFAULT["AF_PROVIDER"]
         )
         self._session  = Session()
+
+    @property
+    def actions(self):
+        if not hasattr(self, "_actions_map"):
+            self._actions_map = {}
+
+        return self._actions_map
+    
+    @actions.setter
+    def actions(self, value):
+        if not isinstance(value, dict):
+            raise TypeError("Actions must be a dictionary.")
+        self._actions_map = value
 
     @staticmethod
     def load(name, fpath):
@@ -137,7 +152,6 @@ class Agent(BaseModel, HubMixin):
             for message in messages:
                 # TODO: deserialize
                 content = message['content']
-                print(message)
                 if message['actions']:
                     actions = message['actions']
                     chunks.append(
@@ -148,8 +162,6 @@ class Agent(BaseModel, HubMixin):
 
         if chunks:
             prompt = upy.join2(chunks, by="\n")
-
-        print(prompt)
 
         return prompt
 

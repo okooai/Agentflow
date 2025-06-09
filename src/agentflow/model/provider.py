@@ -68,7 +68,7 @@ class Provider(BaseModel):
         body    = self._build_request_data(input, stream=stream, role=role,
             tools=tools
         )
-        
+
         session_args = {
             "method": "post", "url": url, "headers": headers,
             "json": body, "timeout": DEFAULT["AF_PROVIDER_TIMEOUT"]
