@@ -34,7 +34,7 @@ class HubMixin:
 
         url    = upy.join2(meta["url"], meta["namespace"], meta["name"], path=True)
         target = upy.join2(
-            DEFAULT["AF_CACHE_HUB"],
+            DEFAULT["AF_PATH_CACHE_HUB"],
             upy.pluralize(type_, count=2),
             meta["namespace"],
             meta["name"],

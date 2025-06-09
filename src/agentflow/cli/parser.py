@@ -47,6 +47,11 @@ def get_parser():
                 }
             },
             "kwargs": {
+                "remove": {
+                    "flag": ("-rm", "--remove"),
+                    "help": "Delete the session after running",
+                    "action": "store_true",
+                },
                 "interactive": {
                     "flag": ("-it", "--interactive"),
                     "help": "Run the Agent in interactive mode",

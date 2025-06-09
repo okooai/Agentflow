@@ -52,7 +52,7 @@ class Provider(BaseModel):
         body = {
             "model": self.name,
             "messages": roles + [
-                {"role": "user", "content": input}
+                {"role": "user", "content": str(input)}
             ],
             "stream": stream
         }
@@ -114,7 +114,8 @@ class Provider(BaseModel):
 
             content = data["choices"][0]["message"]["content"]
 
-            yield {"content": content}
+            if content:
+                yield {"content": content}
 
     def chat(self, *args, **kwargs):
         return upy.run_async(self.achat(*args, **kwargs))

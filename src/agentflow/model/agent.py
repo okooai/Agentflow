@@ -4,6 +4,10 @@ from agentflow.model.base       import BaseModel
 from agentflow.model.action     import Action
 from agentflow.model.provider   import provider
 from agentflow.model.session    import Session
+from agentflow.model.message    import (
+    UserMessage,
+    AgentMessage
+)
 from agentflow.model.helper     import HubMixin
 from agentflow.config           import DEFAULT
 
@@ -14,19 +18,25 @@ class AgentConsole(upy.Console):
 
         self.agent = agent
 
-    async def ahandle(self, input):
+    async def ahandle(self, input_):
         provider  = self.agent._provider
         session   = self.agent._session
         objective = self.agent.objective
+        
+        prompt    = await self.agent._abuild_model_prompt(input_=input_)
+
+        chunks    = []
 
         async for response in provider.achat(
-            input,
-            role   = { "system": objective },
-            tools  = self.agent._build_schema_tools(),
-            stream = True
+            prompt,
+            role    = { "system": objective },
+            tools   = self.agent._build_schema_tools(),
+            stream  = True
         ):
-            tools = response.get("tools")
+            tools   = response.get("tools")
             if tools:
+                actions = []
+
                 for tool in tools:
                     action = self.agent.actions[tool]
 
@@ -38,6 +48,9 @@ class AgentConsole(upy.Console):
                     )
 
                     result = await action.arun()
+                    actions.append({
+                        "name": action.name, "result": result
+                    })
 
                     upy.echo(
                         upy.cli_format(
@@ -46,14 +59,30 @@ class AgentConsole(upy.Console):
                         )
                     )
 
-            if response["content"]:
-                upy.echo(
-                    upy.cli_format(
-                        response["content"], upy.CLI_BLUE
+                await session.ainsert_message(
+                    AgentMessage(
+                        actions = actions
                     )
-                , nl=False)
+                )
+            else:
+                # TODO: handle when both content and tools are provided.
+                content = response.get("content")
+                if content:
+                    upy.echo(
+                        upy.cli_format(
+                            content, upy.CLI_BLUE
+                        )
+                    , nl=False)
 
-        upy.echo()
+                    chunks.append(content)
+
+        if chunks:
+            message_agent = AgentMessage(
+                content = upy.join2(chunks)
+            )
+            await session.ainsert_message(message_agent)
+
+            upy.echo()
 
 class Agent(BaseModel, HubMixin):
     _REPR_ATTRS = ("id", "name")
@@ -92,6 +121,38 @@ class Agent(BaseModel, HubMixin):
                 action.name: action for action in actions
             }
 
+    async def _abuild_model_prompt(self, input_=None):
+        session = self._session
+
+        prompt  = None
+        chunks  = []
+
+        if input_:
+            message = UserMessage(content=input_)
+            await session.ainsert_message(message)
+
+        messages = await session.aget_messages()
+
+        if messages:
+            for message in messages:
+                # TODO: deserialize
+                content = message['content']
+                print(message)
+                if message['actions']:
+                    actions = message['actions']
+                    chunks.append(
+                        f"{message['role']}: [actions] - {actions}"
+                    )
+                else:
+                    chunks.append(f"{message['role']}: {content}")
+
+        if chunks:
+            prompt = upy.join2(chunks, by="\n")
+
+        print(prompt)
+
+        return prompt
+
     def _build_schema_tools(self):
         return [{
             "type": "function",
@@ -118,12 +179,14 @@ class Agent(BaseModel, HubMixin):
         """
         Run Agent.
         """
+        await self._session.setup()
+
         if interactive:
             console = AgentConsole(self)
-            await console.arun(input=input)
+            await console.arun(input_=input)
         else:
             async for response in self._provider.achat(
-                input,
+                self._abuild_model_prompt(input_=input),
                 role   = { "system": self.objective },
                 tools  = self._build_schema_tools(),
                 stream = stream
