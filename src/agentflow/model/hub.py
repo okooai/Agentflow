@@ -5,6 +5,7 @@ from agentflow.model.helper import HubMixin
 from agentflow.model.agent  import Agent
 from agentflow.config       import CONST
 from agentflow.exception    import AgentflowError
+
 class Hub(BaseModel, HubMixin):
     async def _handle_after_agent_aget(self, name, target, **kwargs):
         fpath = upy.join2(target,

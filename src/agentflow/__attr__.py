@@ -15,6 +15,8 @@ def read(fname):
         data = f.read()
     return data
 
+def capitalize(s):
+    return s.capitalize()
 
 def pardir(fname, level=1):
     for _ in range(level):
@@ -67,13 +69,14 @@ def get_revision(path, short=False, raise_err=True):
 
 
 __name__        = "agentflow"
-__command__     = ("agentflow", "af")
+__label__       = capitalize(__name__)
+__command__     = "af"
 __version__     = read(osp.join(pardir(__file__), "VERSION"))
 __build__       = get_revision(pardir(__file__, 2), short=True, raise_err=False)
 __author__      = "Achilles Gasper Rasquinha"
 __email__       = "achillesrasquinha@gmail.com"
 __description__ = (
-    "Agentflow is a simple, yet powerful agentic framework, built for humans."
+    "A simple yet powerful agentic framework built for humans."
 )
 __keywords__    = ["yet", "another", "agent", "framework"]
 __url__         = "https://github.com/okooai/Agentflow"

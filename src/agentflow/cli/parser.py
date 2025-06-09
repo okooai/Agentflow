@@ -1,21 +1,18 @@
 import upyog as upy
 
 from agentflow.__attr__ import (
-    __name__,
+    __label__,
     __version__,
     __description__,
     __command__
 )
+from agentflow import get_version
 
-_DESCRIPTION_JUMBOTRON = """
-%s (v %s)
+_DESCRIPTION_JUMBOTRON = f"""
+{upy.cli_format(__label__,       upy.CLI_BLUE)} v{upy.cli_format(get_version(),   upy.CLI_BOLD)}
 
-%s
-""" % (
-    upy.cli_format(__name__,        upy.CLI_RED),
-    upy.cli_format(__version__,     upy.CLI_BOLD),
-    upy.cli_format(__description__, upy.CLI_BOLD),
-)
+{upy.cli_format(__description__, upy.CLI_BOLD)}
+"""
 
 def get_parser():
     parser = upy.get_base_parser(__command__, _DESCRIPTION_JUMBOTRON)

@@ -62,7 +62,7 @@ Check out [installation](docs/source/install.rst) for more details.
 $ agentflow
 Usage: agentflow [OPTIONS] COMMAND [ARGS]...
 
-  Agentflow is a simple, yet powerful agentic framework, built for humans.
+  A simple yet powerful agentic framework built for humans.
 
 Options:
   --version   Show the version and exit.
