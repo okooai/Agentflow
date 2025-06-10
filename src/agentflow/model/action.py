@@ -53,7 +53,7 @@ class Action(BaseModel, HubMixin):
             **kwargs
         )
 
-    async def arun(self):
+    async def arun(self, **params):
         """
             Run Action.
         """
@@ -72,9 +72,17 @@ class Action(BaseModel, HubMixin):
             module, ext = osp.splitext(CONST["AF_FILENAME_ACTION_HANDLER"])
             python = upy.get_python_exec("python")
 
+            param_string = None
+            if params:
+                param_string = upy.create_param_string(params)
+
+            env    = {
+                upy.getenvvar("PARAM", prefix = CONST["AF_ENVVAR_PREFIX"]): param_string
+            }
+
             code, output, error = shell(\
                 f"{python} -c 'import upyog as upy; import {module}; print(upy.run_async({module}.handle()))'",
-                output=True
+                output=True, env = env
             )
 
         return output

@@ -47,9 +47,12 @@ class AgentConsole(upy.Console):
                         )
                     )
 
-                    result = await action.arun()
+                    args   = tool.get("arguments", {})
+
+                    result = await action.arun(**args)
                     actions.append({
-                        "name": action.name, "result": result
+                        "name": action.name, "args": args,
+                        "result": result
                     })
 
                     upy.echo(

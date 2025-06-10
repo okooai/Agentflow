@@ -1,7 +1,7 @@
 import upyog as upy
 
-from agentflow.model.base  import BaseModel
-from agentflow.model.store import Store
+from agentflow.model.base    import BaseModel
+from agentflow.model.store   import Store
 from agentflow.model.message import (
     UserMessage,
     AgentMessage

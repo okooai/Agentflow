@@ -1,4 +1,5 @@
 import os.path as osp, re, upyog as upy
+from collections import OrderedDict
 import httpx
 
 from agentflow.model.base import BaseModel
@@ -75,10 +76,13 @@ class Provider(BaseModel):
         }
 
         if stream:
+            toolmap = OrderedDict()
+
             async with self._session.stream(**session_args) as response:
                 response.raise_for_status()
 
-                prefix = "data: "
+                prefix  = "data: "
+
                 async for chunk in response.aiter_lines():
                     chunk = upy.safe_decode(chunk)
                     chunk = upy.strip(chunk)
@@ -91,19 +95,36 @@ class Provider(BaseModel):
 
                             content = delta.get("content")
                             tools   = delta.get("tool_calls")
-                            
+
                             result  = {"content": content}
 
                             if tools:
-                                names = []
-
                                 for tool in tools:
-                                    name = upy.getattr2(tool, "function.name")
-                                    if name:
-                                        names.append(name)
+                                    index    = upy.getattr2(tool, "index")
+                                    function = upy.getattr2(tool, "function")
 
-                                if names:
-                                    result["tools"] = names
+                                    name = upy.getattr2(function, "name")
+                                    args = upy.getattr2(function, "arguments")
+
+                                    if not index in toolmap:
+                                        toolmap[index] = {}
+                                        
+                                    if name:
+                                        toolmap[index]['name'] = name
+
+                                    if args:
+                                        if 'arguments' not in toolmap[index]:
+                                            toolmap[index]['arguments'] = ''
+                                        toolmap[index]['arguments'] += args
+
+                                continue
+
+                            if toolmap:
+                                result["tools"] = [{
+                                    "name": meta['name'],
+                                    "arguments": upy.load_json(meta['arguments']) \
+                                        if meta['arguments'] else None,
+                                } for meta in upy.itervalues(toolmap)]
 
                             yield result
         else:

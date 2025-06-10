@@ -9,14 +9,10 @@ PY2 = sys.version_info.major == 2
 if PY2:
     FileNotFoundError = OSError
 
-
 def read(fname):
     with open(fname) as f:
         data = f.read()
     return data
-
-def capitalize(s):
-    return s.capitalize()
 
 def pardir(fname, level=1):
     for _ in range(level):
@@ -45,7 +41,6 @@ def sequence_filter(list_, filter_, type_=list):
     result = type_(filter(filter_, list_))
     return result
 
-
 def get_revision(path, short=False, raise_err=True):
     """
     Returns the git revision of a repository. Raises error if not a valid git repository.
@@ -67,17 +62,16 @@ def get_revision(path, short=False, raise_err=True):
 
     return revision
 
-
 __name__        = "agentflow"
-__label__       = capitalize(__name__)
+__label__       = __name__.capitalize()
 __command__     = "af"
 __version__     = read(osp.join(pardir(__file__), "VERSION"))
 __build__       = get_revision(pardir(__file__, 2), short=True, raise_err=False)
 __author__      = "Achilles Gasper Rasquinha"
-__email__       = "achillesrasquinha@gmail.com"
+__email__       = "achilles.okooai@gmail.com"
 __description__ = (
     "A simple yet powerful agentic framework built for humans."
 )
 __keywords__    = ["yet", "another", "agent", "framework"]
 __url__         = "https://github.com/okooai/Agentflow"
-__license__     = "MIT License"
+__license__     = "GNU GPL v3.0"

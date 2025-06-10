@@ -1,5 +1,10 @@
 from __future__ import absolute_import
 
+import upyog as upy
+from upyog import (
+    arequest
+)
+
 # imports - module imports
 from agentflow.__attr__ import (
     __name__,
@@ -10,11 +15,6 @@ from agentflow.__attr__ import (
 )
 
 def get_version():
-    version = "%s%s" % (__version__, " (%s)" % __build__ if __build__ else "")
-    return version
+    return upy.build_version_str(__version__, __build__)
 
 from agentflow.model.hub import hub, ahub
-
-from upyog import (
-    arequest
-)
