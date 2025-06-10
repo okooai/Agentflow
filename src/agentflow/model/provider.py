@@ -76,7 +76,7 @@ class Provider(BaseModel):
         }
 
         if stream:
-            toolmap = OrderedDict()
+            toolmap = OrderedDict() # TODO: default_ordered_dict
 
             async with self._session.stream(**session_args) as response:
                 response.raise_for_status()
@@ -120,11 +120,16 @@ class Provider(BaseModel):
                                 continue
 
                             if toolmap:
-                                result["tools"] = [{
-                                    "name": meta['name'],
-                                    "arguments": upy.load_json(meta['arguments']) \
-                                        if meta['arguments'] else None,
-                                } for meta in upy.itervalues(toolmap)]
+                                result["tools"] = {}
+
+                                for meta in upy.itervalues(toolmap):
+                                    name = meta['name']
+                                    args = meta['arguments']
+
+                                    if args:
+                                        args = upy.load_json(args)
+
+                                    result["tools"][name] = args
 
                             yield result
         else:

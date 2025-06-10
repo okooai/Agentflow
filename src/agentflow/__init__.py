@@ -18,3 +18,4 @@ def get_version():
     return upy.build_version_str(__version__, __build__)
 
 from agentflow.model.hub import hub, ahub
+from agentflow.environ   import param

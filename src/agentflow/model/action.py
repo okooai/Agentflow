@@ -74,10 +74,12 @@ class Action(BaseModel, HubMixin):
 
             param_string = None
             if params:
-                param_string = upy.create_param_string(params)
+                param_string = upy.create_param_string(**params)
 
             env    = {
-                upy.getenvvar("PARAM", prefix = CONST["AF_ENVVAR_PREFIX"]): param_string
+                upy.getenvvar("PARAMETERS",
+                        prefix = CONST["AF_ENVVAR_PREFIX_ACTION"]): \
+                    param_string
             }
 
             code, output, error = shell(\

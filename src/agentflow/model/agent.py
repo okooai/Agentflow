@@ -37,7 +37,7 @@ class AgentConsole(upy.Console):
             if tools:
                 actions = []
 
-                for tool in tools:
+                for tool, args in upy.iteritems(tools):
                     action = self.agent.actions[tool]
 
                     upy.echo(
@@ -46,8 +46,6 @@ class AgentConsole(upy.Console):
                             upy.CLI_GRAY
                         )
                     )
-
-                    args   = tool.get("arguments", {})
 
                     result = await action.arun(**args)
                     actions.append({

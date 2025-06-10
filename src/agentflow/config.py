@@ -28,6 +28,7 @@ CONST = {
     "AF_ENVVAR_PREFIX":             "AF",
 }
 CONST["AF_URL_PROVIDERS"] =         upy.join2(CONST["AF_URL_DATA"], "providers.json", p=True)
+CONST["AF_ENVVAR_PREFIX_ACTION"] =  f"{CONST['AF_ENVVAR_PREFIX']}_ACTION"
 
 DEFAULT = {
     "AF_PATH_CACHE_HUB":            upy.join2(PATH["CACHE"], "hub",   p=True),
