@@ -15,7 +15,7 @@ CONST = {
     "AF_FILENAME_ACTION_HANDLER":   "action.py",
     "AF_TAG":                       "latest",
     "AF_URL_REPO_BASE":             "https://github.com",
-    "AF_NAMESPACE":                 "okooai-hub",
+    "AF_NAMESPACE":                 "okooai",
     "AF_URL_DATA":                  "https://raw.githubusercontent.com/okooai/Agentflow/refs/heads/develop/data",
     "AF_NAME_PATTERN":              r"^(?:(?P<namespace>[\w-]+)/)?(?P<name>[\w-]+)(?::(?P<tag>[\w-]+))?$",
     "AF_NAME_PATTERN_PROVIDER":     r"^(?P<namespace>[\w-]+)/(?P<name>[\w.-]+)$",
